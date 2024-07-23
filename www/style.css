@@ -1,0 +1,231 @@
+/* General Body Styling */
+body {
+    background-color: #f4f4f9; /* Light grey for the overall body background */
+    background-image: url('EU.jpg'); /* Background image, if applicable */
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Main logo */
+.skin-blue .main-header .logo {
+    background-color: #ff6200; /* ING orange */
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+/* Logo when hovered */
+.skin-blue .main-header .logo:hover {
+    background-color: #e55c00; /* Slightly darker orange for hover effect */
+    color: #ffffff;
+}
+
+/* Navbar (rest of the header) */
+.skin-blue .main-header .navbar {
+    background-color: #001f3f; /* Dark blue */
+    border-bottom: 2px solid #ff6200; /* Orange bottom border for emphasis */
+}
+
+/* Toggle button when hovered */
+.skin-blue .main-header .navbar .sidebar-toggle:hover {
+    background-color: #e55c00; /* Slightly darker orange for hover effect */
+}
+
+/* Main sidebar */
+.skin-blue .main-sidebar {
+    background-color: #001f3f; /* Dark blue */
+    color: #ffffff;
+}
+
+/* Active selected tab in the sidebar menu */
+.skin-blue .main-sidebar .sidebar .sidebar-menu .active a {
+    background-color: #ff6200; /* ING orange */
+    color: #ffffff;
+    font-weight: bold;
+}
+
+/* Other links in the sidebar menu */
+.skin-blue .main-sidebar .sidebar .sidebar-menu a {
+    background-color: #003366; /* Light blue */
+    color: #ffffff;
+    border-radius: 4px;
+    margin: 2px;
+}
+
+/* Other links in the sidebar menu when hovered */
+.skin-blue .main-sidebar .sidebar .sidebar-menu a:hover {
+    background-color: #ff6200; /* ING orange */
+    color: #ffffff;
+}
+
+/* Sidebar header */
+.skin-blue .main-sidebar .sidebar .sidebar-header {
+    background-color: #00274d; /* Slightly darker blue */
+    color: #ffffff;
+    text-align: center;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+/* Sidebar user panel */
+.skin-blue .main-sidebar .user-panel {
+    background-color: #00274d; /* Slightly darker blue */
+    color: #ffffff;
+    padding: 10px;
+    border-bottom: 1px solid #ff6200; /* Orange border */
+}
+
+/* Sidebar user panel links */
+.skin-blue .main-sidebar .user-panel a {
+    color: #ffffff;
+}
+
+/* Body content */
+.content-wrapper, .right-side {
+    background-color: #f4f4f9; /* Light grey background for content */
+}
+
+/* Fluid Row Styling */
+.fluid-row {
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #ffffff; /* White background for fluid rows */
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+/* Box Styling */
+.box.box-solid {
+    border: 1px solid #FF6200; /* ING Orange border */
+    background-color: #FFFFFF; /* White background inside box */
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.box.box-solid > .box-header {
+    color: #FFFFFF;
+    background-color: #001F3F; /* ING Blue background for box header */
+    padding: 10px;
+    font-weight: bold;
+    border-bottom: 2px solid #FF6200; /* ING Orange bottom border */
+}
+
+.box.box-solid > .box-body {
+    padding: 15px;
+    color: #333333; /* Dark grey text for contrast */
+    background-color: #FFFFFF;
+}
+
+/* Box title styling */
+.box-title {
+    color: #FFFFFF;
+    background-color: #001F3F; /* Dark blue background for box title */
+    padding: 10px;
+    margin: -10px -10px 10px -10px; /* Align title edge to box */
+    border-bottom: 1px solid #FF6200; /* Orange border below title */
+    font-weight: bold;
+}
+
+/* Footer */
+.main-footer {
+    background-color: #001f3f; /* Dark blue */
+    color: #ffffff;
+    padding: 10px;
+    border-top: 2px solid #ff6200; /* Orange top border */
+    text-align: center;
+    font-size: 14px;
+}
+
+/* Info boxes */
+.info-box {
+    background-color: #ffffff;
+    border-left: 5px solid #ff6200; /* Orange border */
+    padding: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Info box content */
+.info-box-content {
+    color: #333333;
+}
+
+/* Button primary */
+.btn-primary {
+    background-color: #ff6200; /* ING orange */
+    border-color: #ff6200;
+    color: #ffffff;
+}
+
+/* Button primary hover */
+.btn-primary:hover {
+    background-color: #e55c00; /* Slightly darker orange */
+    border-color: #e55c00;
+}
+
+/* Custom styles for tabBox */
+.nav-tabs-custom {
+    margin-bottom: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.nav-tabs-custom > .nav-tabs {
+    border-bottom-color: #FF6200; /* ING Orange line below the tabs */
+}
+
+.nav-tabs-custom > .nav-tabs > li.active > a,
+.nav-tabs-custom > .nav-tabs > li.active > a:focus,
+.nav-tabs-custom > .nav-tabs > li.active > a:hover {
+    background-color: #FF6200; /* ING Orange for active tab */
+    color: #FFFFFF;
+    border: 1px solid #FF6200; /* Keep the border consistent */
+    border-bottom-color: transparent; /* Remove bottom border to highlight active tab */
+}
+
+.nav-tabs-custom > .nav-tabs > li > a {
+    background-color: #003366; /* Light blue background for inactive tabs */
+    color: #FFFFFF;
+    border: 1px solid transparent;
+}
+
+.nav-tabs-custom > .nav-tabs > li > a:hover {
+    background-color: #e55c00; /* Slightly darker orange on hover */
+    color: #FFFFFF;
+}
+
+.nav-tabs-custom > .tab-content {
+    border: 1px solid #FF6200; /* Orange border around content */
+    padding: 15px;
+    background-color: #FFFFFF; /* White background for content */
+    color: #333333; /* Darker text for contrast */
+}
+
+/* Tab Panel Styling */
+.tab-panel {
+    background-color: #FFFFFF; /* White background for tab panel */
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+/* Responsive Design Tweaks */
+@media (max-width: 768px) {
+    .nav-tabs-custom > .nav-tabs > li > a {
+        padding: 10px;
+        font-size: 14px;
+    }
+    
+    .box.box-solid > .box-header,
+    .box.box-solid > .box-body {
+        padding: 10px;
+    }
+    
+    .fluid-row {
+        padding: 5px;
+    }
+}

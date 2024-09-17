@@ -35,6 +35,9 @@ get_closed_positions <- function(account_statement){
     mutate(symbol = str_extract(string = Action, pattern = "(?<=\\().*(?=\\))"),
            symbol = word(symbol, -1, sep = "\\("),
            symbol = ifelse(Type == "Crypto", paste0(symbol, "-", "USD"), symbol),
+           symbol = ifelse(symbol %in% c("BTC", "ADA", "LTC"), paste0(symbol, "-USD"), symbol),
+           symbol = ifelse(symbol %in% c("OR", "SU", "VIE", "BN", "ACA"), paste0(symbol, ".PA"), symbol),
+           symbol = ifelse(symbol %in% c("ZAL"), paste0(symbol, ".DE"), symbol),
            open_date = as.POSIXct(strptime(open_date , format = "%d/%m/%Y %H:%M:%S")),
            close_date = as.POSIXct(strptime(close_date, format = "%d/%m/%Y %H:%M:%S")))
   
@@ -45,11 +48,37 @@ get_closed_positions <- function(account_statement){
 
 
 get_open_positions <- function(account_statement){
-  
   activity <- read_excel(account_statement, sheet = "Account Activity")
   
+  actv <- activity |>
+    mutate(Date = as.POSIXct(Date, format = "%d/%m/%Y %H:%M:%S")) |>
+    group_by(as.Date(Date)) |>
+    summarise(Type = "Cash",
+              Details = "Cash",
+              Amount = Balance[which.max(Date)],
+              Date = Date[which.max(Date)],
+              Units = 1,
+              `Realized Equity Change` = NA,
+              `Realized Equity` = NA,
+              Balance = NA,
+              `Position ID` = NA,
+              `Asset type` = "Cash",
+              NWA = NA,
+              symbol = "Cash",
+              currency = "USD",
+              open_price = NA,
+              execution_date_time = Date,
+              Date = as.Date(execution_date_time),
+              time =  strftime(execution_date_time, format="%H:%M:%S")) |>
+    select(-`as.Date(Date)`) |>
+    rename("asset_type" = "Asset type",
+           "position_id" = "Position ID",
+           "realized_equity_change" = "Realized Equity Change",
+           "realized_equity" = "Realized Equity")
+
+  
   activity <- activity |>
-    filter(Type == "Open Position") |>
+    filter(Type %in%  c("Open Position", "Cash")) |>
     rename("asset_type" = "Asset type",
            "position_id" = "Position ID",
            "realized_equity_change" = "Realized Equity Change",
@@ -58,11 +87,18 @@ get_open_positions <- function(account_statement){
            currency = word(Details, 2, sep = "/"),
            open_price = as.numeric(Amount)/as.numeric(Units),
            symbol = ifelse(asset_type == "Crypto", paste0(symbol, "-", currency), symbol),
+           symbol = word(symbol, -1, sep = "\\("),
+           symbol = ifelse(Type == "Crypto", paste0(symbol, "-", "USD"), symbol),
+           symbol = ifelse(symbol %in% c("BTC", "ADA", "LTC"), paste0(symbol, "-USD"), symbol),
+           symbol = ifelse(symbol %in% c("OR", "SU", "VIE", "BN", "ACA"), paste0(symbol, ".PA"), symbol),
+           symbol = ifelse(symbol %in% c("ZAL"), paste0(symbol, ".DE"), symbol),
            execution_date_time = as.POSIXct(strptime(Date, format = "%d/%m/%Y %H:%M:%S")),
            Date = as.Date(execution_date_time),
-           time =  strftime(execution_date_time, format="%H:%M:%S"))
+           time =  strftime(execution_date_time, format="%H:%M:%S"),
+           Units = as.numeric(Units))
     
   
+  activity <- rbind(activity, actv)
   return(activity)
 }
 

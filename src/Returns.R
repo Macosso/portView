@@ -17,7 +17,7 @@ get_cum_returns <- function(x, period = "1D"){
   }else if(period == "3M"){
     x0 <- Sys.Date() %m-% months(3)
   }else if(period == "12M"){
-    x0 <- Sys.Date() %m-% months(12)
+    x0 <- Sys.Date() %m-% years(1)
   }else if(period == "3Y"){
     x0 <- Sys.Date() %m-% years(3)
   }

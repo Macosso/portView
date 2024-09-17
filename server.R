@@ -22,6 +22,7 @@ server <- function(input, output, session) {
   
   
   raw_symbols <- unique(open_closed$symbol)
+  raw_symbols <- raw_symbols[raw_symbols != "Cash"]
   
   raw_sm_react <- reactive({raw_symbols[!raw_symbols %in% input$excSymb]})
   
@@ -31,16 +32,15 @@ server <- function(input, output, session) {
   tickers <- reactive({tickers1()[tickers1() %in% raw_sm_react()]})
   
   stock_prices <- eventReactive(input$downloadsymbols,
-                           {quantR::loadTokens(tickers(), 
+                           {na.locf(quantR::loadTokens(tickers(), 
                                                start = input$inputDate[1], 
-                                               end = input$inputDate[2])})
+                                               end = input$inputDate[2]))})
 
   
   #tickers <- eventReactive(input$submitexclusion, {tickers()[!tickers %in% input$excSymb]})
   
-  
   long_df_prices <- reactive({get_prices_long(stock_prices())})
-  merged_acc_prices <- reactive({merge_acc_prices(open_closed, long_df_prices())})
+  merged_acc_prices <- reactive({merge_acc_prices(open_closed, long_df_prices(), forex)})
   port_w <- reactive({get_port_weights(merged_acc_prices()) |>
       mutate(across(!date, function(w) paste0(round(w*100,2),"%"))) 
     })
@@ -106,4 +106,18 @@ server <- function(input, output, session) {
                              options = list(scrollX = TRUE,
                                             autoWidth = TRUE,
                                             columnDefs = list(list(width = '100px', targets = "date"))))
+  
+  output$portReturns <- renderDT(
+    merged_acc_prices(),
+    options = list(scrollX = TRUE,
+                   autoWidth = TRUE,
+                   columnDefs = list(list(width = '100px', targets = "date")))
+  )
+  
+  port_value_dt <- reactive(merged_acc_prices() |> 
+                              dplyr::filter(between(date, 
+                                                    input$DatesMerge[1], 
+                                                    input$DatesMerge[2])))
+  
+  output$portValue <- renderPlot(plot_port_value(port_value_dt()))
 }

@@ -15,10 +15,15 @@ symbols_mapping <- open_positions |>
 
 
 
+
 open_closed <- open_positions |>
   left_join(closed_positions |> select(-c(symbol, open_price, Amount, Units, Type)), by = "position_id") |>
-  mutate(open_date = as.Date(open_date),
-         close_date = as.Date(close_date)) |>
+  group_by(symbol) |>
+  arrange(open_date) |>
+  mutate(open_date = as.Date(Date),
+         close_date = as.Date(close_date),
+         close_date = as.Date(ifelse(symbol == "Cash", lead(open_date)-1, close_date)),
+         position_id  = ifelse(symbol == "Cash", as.character(1:n()), position_id)) |>
   expand_dates()
 
 
@@ -27,3 +32,6 @@ open_closed <- open_positions |>
 
 "#f4b943"
 #00ff00
+
+listPrices <- sapply(unique(open_closed$symbol)[1:4],
+                     function(x) quantmod::getSymbols(x, auto.assign = FALSE, from = "2021-01-01"))

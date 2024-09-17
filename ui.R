@@ -44,7 +44,7 @@ ui <- dashboardPage(
                                 fluidRow(
                                   box(title = "DATA DOWNLOAD SETTINGS", solidHeader = TRUE, width = 3,
                                       shiny::dateRangeInput("inputDate", "select Dates", 
-                                                     start = as.character(Sys.Date()-30),
+                                                     start = as.character(Sys.Date()-367),
                                                      width = "100%"),
                                       shiny::actionButton("downloadsymbols", "IMPORT ASSETS DATA", width = "100%"),
                                       shiny::textInput("symbol correction", "CORRECT SYMBOLS",
@@ -55,13 +55,14 @@ ui <- dashboardPage(
                                       shiny::actionButton("submitexclusion", "submit", width = "100%")
                                       ),
                                   box(title = "LATEST CHANGE",width = 9, height = 9, solidHeader = TRUE,
-                                      shiny::selectInput("period", "SELECT RETURN PERIOD", 
+                                      shiny::radioButtons("period", "SELECT RETURN PERIOD", 
                                                          choices = c("1D", "7D", "MTD", "YTD", "1M", "3M", "12M", "3Y"),
-                                                         selected = "1D"),
-                                      shiny::selectInput("asset_class", "SELECT ASSET TYPE", 
+                                                         selected = "1D",
+                                                         inline = TRUE),
+                                      shiny::checkboxGroupInput("asset_class", "SELECT ASSET TYPE", 
                                                          choices = c("CFD", "Crypto", "Stocks"),
                                                          selected = c("CFD", "Crypto", "Stocks"),
-                                                         multiple = TRUE),  
+                                                         inline = TRUE),  
                                       plotOutput("lastChange")
                                       )
                                   )
@@ -76,16 +77,21 @@ ui <- dashboardPage(
                 )),
       tabItem(tabName = "portview",
               fluidRow(
-                box(title = "Settings", solidHeader = TRUE, width = 3,
-                    shiny::sliderInput("selectID", "Select to N", min = 1, max = 10, value = 4, step = 2),
-                    shiny::dateRangeInput("inputDate", "select Dates", start = as.character(Sys.Date()-30)),
-                    shiny::selectInput("assetType", "Select Asset Type", choices = c("Crypto", "Stocks", "CFD"), multiple = TRUE)
-                    ),
-                tabBox(title = "Analysis", width = 9,
+                tabBox(title = "Analysis", width = 12,
                   tabPanel("A",
                            dataTableOutput("weights")),
-                  tabPanel("B"),
-                  tabPanel("C")
+                  tabPanel("B",
+                           dataTableOutput("portReturns")),
+                  tabPanel("C", 
+                           sliderInput("DatesMerge",
+                                       "Dates:",
+                                       min = as.Date("2021-03-01","%Y-%m-%d"),
+                                       max = Sys.Date(),
+                                       value  = c(Sys.Date() - 30, Sys.Date()),
+                                       timeFormat="%Y-%m-%d",
+                                       width = "100%"),
+                           plotOutput("portValue", height = "500px")
+                           )
                 )
               )),
       tabItem(tabName = "portperf",

@@ -59,6 +59,7 @@ Generated in `data/`:
 
 - If an API call fails, ingestion logs a warning and loads the corresponding cached CSV.
 - If cache is missing for that dataset, ingestion stops with an actionable error.
+- If `GET /instruments/rates` returns `404 RouteNotFound`, ingestion logs a warning, writes an empty `data/rates.csv`, and continues.
 
 ## Notes
 

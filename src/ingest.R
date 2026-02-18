@@ -16,14 +16,20 @@ safe_number <- function(x) {
   if (is.null(x) || length(x) == 0) {
     return(NA_real_)
   }
-  as.numeric(x)
+  if (is.list(x)) {
+    x <- unlist(x, recursive = TRUE, use.names = FALSE)
+  }
+  suppressWarnings(as.numeric(x[[1]]))
 }
 
 safe_integer <- function(x) {
   if (is.null(x) || length(x) == 0) {
     return(NA_integer_)
   }
-  as.integer(x)
+  if (is.list(x)) {
+    x <- unlist(x, recursive = TRUE, use.names = FALSE)
+  }
+  suppressWarnings(as.integer(x[[1]]))
 }
 
 safe_time <- function(x) {
@@ -33,7 +39,11 @@ safe_time <- function(x) {
 
   x_chr <- as.character(x)
   x_chr[!nzchar(x_chr)] <- NA_character_
-  as.POSIXct(x_chr, format = "%Y-%m-%dT%H:%M:%OS", tz = "UTC")
+  suppressWarnings(as.POSIXct(x_chr, format = "%Y-%m-%dT%H:%M:%OS", tz = "UTC"))
+}
+
+is_route_not_found_error <- function(err) {
+  grepl("RouteNotFound|status\\s+404", err$message, ignore.case = TRUE)
 }
 
 normalize_transactions <- function(trades_payload) {
@@ -261,6 +271,25 @@ run_ingestion <- function(min_date, page_size = 200, data_dir = "data") {
       normalized
     },
     error = function(err) {
+      if (is_route_not_found_error(err)) {
+        warning(
+          paste0(
+            "[ingest] Rates endpoint unavailable (404 RouteNotFound). ",
+            "Writing empty rates cache and continuing."
+          ),
+          call. = FALSE
+        )
+        empty_rates <- tibble(
+          instrument_id = integer(),
+          timestamp = as.POSIXct(character()),
+          bid = numeric(),
+          ask = numeric(),
+          mid = numeric()
+        )
+        write_cache(empty_rates, data_dir, "rates")
+        return(empty_rates)
+      }
+
       load_cached_or_stop(data_dir, "rates", paste0("Rates fetch failed: ", err$message))
     }
   )

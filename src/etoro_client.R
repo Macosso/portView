@@ -55,6 +55,7 @@ parse_json_response <- function(response) {
 perform_get_request <- function(endpoint, query = list(), retries = 4, backoff_base = 0.5, timeout_sec = 30) {
   url <- paste0(etoro_base_url, endpoint)
   query <- query[!vapply(query, is.null, logical(1))]
+  headers <- build_request_headers()
 
   for (attempt in seq_len(retries)) {
     page_info <- if (!is.null(query$page)) paste0(" page=", query$page) else ""
@@ -64,7 +65,7 @@ perform_get_request <- function(endpoint, query = list(), retries = 4, backoff_b
       {
         httr::GET(
           url = url,
-          httr::add_headers(.headers = build_request_headers()),
+          httr::add_headers(.headers = headers),
           query = query,
           httr::timeout(timeout_sec)
         )

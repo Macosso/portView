@@ -61,8 +61,53 @@ Generated in `data/`:
 - If cache is missing for that dataset, ingestion stops with an actionable error.
 - If `GET /instruments/rates` returns `404 RouteNotFound`, ingestion logs a warning, writes an empty `data/rates.csv`, and continues.
 
+## Portfolio valuation (historical prices + value over time)
+
+eToro API does not expose historical price data, so we use quantmod (Yahoo Finance) to fetch prices.
+
+### Setup instrument mapping
+
+1. After running ingestion, generate a mapping template:
+
+   `Rscript src/generate_mapping.R`
+
+   This creates `data/instrument_mapping.csv` with all your instrument IDs and empty ticker columns.
+
+2. Edit `data/instrument_mapping.csv` and fill in ticker symbols (Yahoo Finance format):
+
+   ```csv
+   instrument_id,ticker
+   1001,AAPL
+   1002,GOOGL
+   100000,BTC-USD
+   ```
+
+   Reference: `data/instrument_mapping.example.csv`
+
+### Run portfolio valuation
+
+From project root:
+
+`Rscript src/portfolio_valuation.R`
+
+Or in R/Shiny:
+
+`source("src/portfolio_valuation.R")`
+
+`run_portfolio_valuation(start_date = "2020-01-01")`
+
+### Valuation outputs
+
+Generated in `data/`:
+
+- `instrument_mapping.csv` (you create this manually)
+- `historical_prices.csv` (fetched from Yahoo Finance via quantmod)
+- `holdings_timeline.csv` (daily holdings reconstructed from transactions)
+- `portfolio_value.csv` (daily total portfolio value)
+
 ## Notes
 
 - Secrets are not hardcoded in source.
 - Market rates ingestion uses only current rates (`GET /instruments/rates`).
 - Historical candles/OHLC are intentionally not implemented without official endpoint details.
+- Portfolio valuation requires manual ticker mapping because eToro API returns numeric `instrumentId` only.
